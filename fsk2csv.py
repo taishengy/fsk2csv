@@ -7,7 +7,8 @@ imported into KeePass2 with the General CSV import tool.
 KeePass2 only supports importing 5 fields from csv files: account, username, password, website, and comments. So don't
 expect everything to come over perfectly.
 
-I wrote this because I found myself using a linux machine, which F-Secure doesn't develop a key client for.
+I wrote this because I found myself using a linux machine, which F-Secure doesn't develop a key client for, and the
+Windows client doesn't run in WINE.
 
 To use: Place this script in the directory with the .fsk file and run the script, it should create a "output.csv" file
 in the same directory which can be imported into KeePass2"""
@@ -61,13 +62,15 @@ for item in fsk['data']:
     entry = fsk['data'][item]
     fsk_count += 1
 
-    account = entry['service']
-    username = entry['username']
-    password = entry['password']
-    website = entry['url']
-    comments = entry['notes']
+    account = entry['service'].replace("\"", "\\\" ")
+    username = entry['username'].replace("\"", "\\\" ")
+    password = entry['password'].replace("\"", "\\\" ")
+    website = entry['url'].replace("\"", "\\\" ")
+    comments = entry['notes'].replace("\"", "\\\" ")
 
     entry_string = "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n".format(account, username, password, website, comments)
+    # entry_string = entry_string.replace("\"", "\\\" ")
+    print(entry_string)
     csv_obj.write(entry_string)
     csv_count += 1
 
